@@ -1,0 +1,161 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Workout API",
+    "version": "1.0.0",
+    "description": "API for managing workouts"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+  "/workouts": {
+    "get": {
+      "summary": "Get all workouts",
+      "responses": {
+        "200": {
+          "description": "List of workouts",
+          "content": {
+            "application/json": {
+              "example": [
+                {
+                  "_id": "123",
+                  "name": "Bench Press",
+                  "muscleGroup": "Chest",
+                  "sets": 3,
+                  "reps": 10,
+                  "weight": 135,
+                  "date": "2026-03-28",
+                  "notes": "Felt strong"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create a new workout",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "name": "Squat",
+              "muscleGroup": "Legs",
+              "sets": 4,
+              "reps": 8,
+              "weight": 185,
+              "date": "2026-03-28",
+              "notes": "Heavy day"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Workout created"
+        },
+        "400": {
+          "description": "Invalid input"
+        }
+      }
+    }
+  },
+
+  "/workouts/{id}": {
+    "get": {
+      "summary": "Get a workout by ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Workout found"
+        },
+        "400": {
+          "description": "Invalid ID"
+        },
+        "404": {
+          "description": "Workout not found"
+        }
+      }
+    },
+
+    "put": {
+      "summary": "Update a workout",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "example": {
+              "name": "Updated Workout",
+              "muscleGroup": "Back",
+              "sets": 4,
+              "reps": 12,
+              "weight": 155,
+              "date": "2026-03-28",
+              "notes": "Updated notes"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Workout updated"
+        },
+        "400": {
+          "description": "Invalid input or ID"
+        },
+        "404": {
+          "description": "Workout not found"
+        }
+      }
+    },
+
+    "delete": {
+      "summary": "Delete a workout",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Workout deleted"
+        },
+        "400": {
+          "description": "Invalid ID"
+        },
+        "404": {
+          "description": "Workout not found"
+        }
+      }
+    }
+  }
+}
+}
