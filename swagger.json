@@ -7,8 +7,13 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
-    }
+    "url": "http://localhost:3000",
+    "description": "Local server"
+  },
+  {
+    "url": "https://workoutapi-jl18.onrender.com",
+    "description": "Production server"
+  }
   ],
   "paths": {
   "/workouts": {

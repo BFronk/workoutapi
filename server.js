@@ -14,6 +14,9 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the Workout API! Go to /api-docs to explore and test endpoints.');
+});
 app.use('/workouts', require('./routes/workouts'));
 
 // MongoDB Connection
