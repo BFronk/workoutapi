@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const isAuthenticated = require('../middleware/auth');
 
 const {
   getAllWorkouts,
@@ -9,10 +10,10 @@ const {
   deleteWorkout
 } = require('../controllers/workoutController');
 
-router.get('/', getAllWorkouts);
-router.get('/:id', getWorkoutById);
-router.post('/', createWorkout);
-router.put('/:id', updateWorkout);
-router.delete('/:id', deleteWorkout);
+router.get('/', isAuthenticated, getAllWorkouts);
+router.get('/:id', isAuthenticated, getWorkoutById);
+router.post('/', isAuthenticated, createWorkout);
+router.put('/:id', isAuthenticated, updateWorkout);
+router.delete('/:id', isAuthenticated, deleteWorkout);
 
 module.exports = router;
