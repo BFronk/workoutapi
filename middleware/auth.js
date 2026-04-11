@@ -1,9 +1,8 @@
-function isAuthenticated(req, res, next) {
-    if (req.session && req.session.user) {
-        next(); // user is logged in → continue
-    } else {
-        res.status(401).json({ message: "Unauthorized" });
-    }
-}
+const ensureAuth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Not authenticated' });
+};
 
-module.exports = isAuthenticated;
+module.exports = ensureAuth;

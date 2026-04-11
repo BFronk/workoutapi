@@ -3,14 +3,46 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 // const db = require('../db/mongodb');
 const User = require('../models/user');
+const passport = require('passport');
+
+// Google login
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile'] })
+);
+
+// Callback
+router.get('/google/callback',
+  passport.authenticate('google', {
+    successRedirect: '/',
+    failureRedirect: '/auth/failure'
+  })
+);
+
+router.get('/failure', (req, res) => {
+  res.status(401).send('Login failed');
+});
+
+router.get('/me', (req, res) => {
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    res.status(401).json({ message: 'Not logged in' });
+  }
+});
+
+router.get('/logout', (req, res) => {
+  req.logout(() => {
+    res.send('Logged out');
+  });
+});
 
 // register
 router.post('/register', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required" });
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: "Username, email, and password are required" });
         }
 
         const existingUser = await User.findOne({ email });
@@ -22,6 +54,7 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
+            username,
             email,
             password: hashedPassword
         });
@@ -50,12 +83,14 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: "Invalid password" });
         }
 
-        req.session.user = {
-            _id: user._id,
-            email: user.email
-        };
+        // 👇 THIS IS THE FIX
+        req.login(user, (err) => {
+            if (err) {
+                return res.status(500).json({ message: err.message });
+            }
 
-        res.json({ message: "Login successful" });
+            res.json({ message: "Login successful" });
+        });
 
     } catch (err) {
         res.status(500).json({ message: err.message });
